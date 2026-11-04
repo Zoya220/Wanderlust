@@ -1,0 +1,251 @@
+<% layout("/layouts/boilerplate") %>
+
+<style>
+  /* Container Wrapper */
+  .filter-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+    max-width: 100%;
+    margin: 1.5rem 0;
+  }
+
+  /* Horizontal Scrollable Filters */
+  #filters {
+    display: flex;
+    align-items: center;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    white-space: nowrap;
+    gap: 2rem;
+    padding: 0.5rem 0.5rem;
+    /* Hide scrollbars for clean UI */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+    flex-grow: 1;
+  }
+
+  #filters::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
+
+  /* Filter Item */
+  .filter {
+    text-align: center;
+    opacity: 0.7;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .filter i {
+    font-size: 1.4rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .filter p {
+    font-size: 0.8rem;
+    margin: 0;
+    font-weight: 500;
+  }
+
+  /* Hover & Active Effects */
+  .filter:hover {
+    opacity: 1;
+    color: #fe424d;
+    transform: translateY(-2px);
+  }
+
+  /* Scroll Navigation Buttons */
+  .scroll-btn {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 2;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+  }
+
+  .scroll-btn:hover {
+    scale: 1.08;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    color: #fe424d;
+  }
+
+  .scroll-btn-left {
+    margin-right: 0.5rem;
+  }
+
+  .scroll-btn-right {
+    margin-left: 0.5rem;
+  }
+
+  .tax-toggle {
+    border: 1px solid #e0e0e0;
+    border-radius: 1rem;
+    height: 3.25rem;
+    padding: 1rem;
+    margin-left: 1rem;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .tax-info {
+    display: none;
+  }
+</style>
+
+<div class="filter-container">
+  <!-- Scroll Left Button -->
+  <button class="scroll-btn scroll-btn-left" onclick="scrollFilters(-200)" aria-label="Scroll left">
+    <i class="fa-solid fa-chevron-left"></i>
+  </button>
+
+  <!-- Filter List -->
+  <div id="filters">
+    <div class="filter">
+      <div><i class="fa-solid fa-fire"></i></div>
+      <p>Trending</p>
+    </div>
+
+    <div class="filter">
+      <div><i class="fa-solid fa-hotel"></i></div>
+      <p>Hotels</p>
+    </div>
+
+    <div class="filter">
+      <div><i class="fa-brands fa-airbnb"></i></div>
+      <p>Unique Stays</p>
+    </div>
+
+    <div class="filter">
+      <div><i class="fa-solid fa-bed"></i></div>
+      <p>Rooms</p>
+    </div>
+
+    <div class="filter">
+      <div><i class="fa-solid fa-umbrella-beach"></i></div>
+      <p>Beachfront</p>
+    </div>
+
+    <div class="filter">
+      <div><i class="fa-solid fa-suitcase-rolling"></i></div>
+      <p>Travel</p>
+    </div>
+
+    <div class="filter">
+      <div><i class="fa-solid fa-house-flag"></i></div>
+      <p>Cabins</p>
+    </div>
+
+    <div class="filter">
+      <div><i class="fa-solid fa-mountain"></i></div>
+      <p>Mountains</p>
+    </div>
+
+    <div class="filter">
+      <div><i class="fa-solid fa-tent"></i></div>
+      <p>Camping</p>
+    </div>
+
+    <div class="filter">
+      <div><i class="fa-solid fa-person-skiing"></i></div>
+      <p>Ski-in/out</p>
+    </div>
+
+    <div class="filter">
+      <div><i class="fa-solid fa-monument"></i></div>
+      <p>Historical</p>
+    </div>
+
+    <div class="filter">
+      <div><i class="fa-solid fa-landmark"></i></div>
+      <p>Mansions</p>
+    </div>
+
+    <div class="filter">
+      <div><i class="fa-solid fa-person-swimming"></i></div>
+      <p>Amazing Pools</p>
+    </div>
+
+    <div class="filter">
+      <div><i class="fa-solid fa-plane-arrival"></i></div>
+      <p>Getaways</p>
+    </div>
+
+    <div class="filter">
+      <div><i class="fa-solid fa-campground"></i></div>
+      <p>Parks</p>
+    </div>
+
+    <div class="filter">
+      <div><i class="fa-solid fa-tractor"></i></div>
+      <p>Farms</p>
+    </div>
+  </div>
+
+  <!-- Scroll Right Button -->
+  <button class="scroll-btn scroll-btn-right" onclick="scrollFilters(200)" aria-label="Scroll right">
+    <i class="fa-solid fa-chevron-right"></i>
+  </button
+
+  <!-- Tax Toggle Switch -->
+  <div class="tax-toggle">
+    <div class="form-check-reverse form-switch">
+      <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault">
+      <label class="form-check-label" for="switchCheckDefault">Display total after taxes</label>
+    </div>
+  </div>
+</div>
+
+<div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 g-4 mt-2">
+  <% for (let listing of allListings) { %>
+    <a href="/listings/<%= listing._id %>" class="listing-link">
+      <div class="card col listing-card h-100">
+        <img
+          src="<%= listing.image && listing.image.url ? listing.image.url : 'https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b' %>"
+          class="card-img-top"
+          alt="listing_image"
+        />
+        <div class="card-img-overlay">&#x2764;</div>
+        <div class="card-body">
+          <p class="card-text">
+            <b><%= listing.title %></b><br />
+            &#x20B9; <%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A" %> / night
+            <i class="tax-info">&nbsp; &nbsp;+18% GST</i>
+          </p>
+        </div>
+      </div>
+    </a>
+  <% } %>
+</div>
+
+<script>
+  function scrollFilters(scrollAmount) {
+    const filtersContainer = document.getElementById("filters");
+    filtersContainer.scrollBy({
+      left: scrollAmount,
+      behavior: "smooth"
+    });
+  }
+
+  let taxSwitch = document.getElementById("switchCheckDefault");
+  taxSwitch.addEventListener("click", () => {
+    let taxInfo = document.getElementsByClassName("tax-info");
+    for (let info of taxInfo) {
+      if (info.style.display !== "inline") {
+        info.style.display = "inline";
+      } else {
+        info.style.display = "none";
+      }
+    }
+  });
+</script>
