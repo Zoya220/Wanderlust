@@ -11,8 +11,7 @@ Wanderlust is a full-stack web application for discovering, listing, and reviewi
 
 ## 📸 Preview
 
-![Wanderlust Home Page](<img width="1887" height="856" alt="image" src="https://github.com/user-attachments/assets/c7d746ed-0a5d-480c-8910-4ba6b869703c" />
-)
+![Wanderlust Home Page](https://github.com/user-attachments/assets/c7d746ed-0a5d-480c-8910-4ba6b869703c)
 *Explore listing destinations with dynamic filter categories and tax calculation toggle.*
 
 ---
