@@ -10,8 +10,7 @@ const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const ExpressError = require("./utility/ExpressError.js");
 const session = require("express-session");
-// TO THIS:
-const MongoStore = require("connect-mongo").default;
+const MongoStore = require("connect-mongo");
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
@@ -101,19 +100,11 @@ app.use((req, res, next) => {
 
 // Global Error Handler
 app.use((err, req, res, next) => {
-  if (res.headersSent) {
-    return next(err);
-  }
-
   const { statusCode = 500, message = "Something went wrong!" } = err;
-
-  res.status(statusCode).render("listings/error.ejs", {
-    message,
-  });
+  res.status(statusCode).render("listings/error.ejs", { message });
 });
 
 const port = process.env.PORT || 8080;
-
-app.listen(port, "0.0.0.0", () => {
+app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
