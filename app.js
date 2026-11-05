@@ -101,11 +101,19 @@ app.use((req, res, next) => {
 
 // Global Error Handler
 app.use((err, req, res, next) => {
+  if (res.headersSent) {
+    return next(err);
+  }
+
   const { statusCode = 500, message = "Something went wrong!" } = err;
-  res.status(statusCode).render("listings/error.ejs", { message });
+
+  res.status(statusCode).render("listings/error.ejs", {
+    message,
+  });
 });
 
 const port = process.env.PORT || 8080;
-app.listen(port, () => {
+
+app.listen(port, "0.0.0.0", () => {
   console.log(`Server listening on port ${port}`);
 });
