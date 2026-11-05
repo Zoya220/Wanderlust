@@ -1,7 +1,7 @@
 <% layout("/layouts/boilerplate") %>
 
 <script>
-  const mapToken = "<%= process.env.MAP_TOKEN %>";
+  const mapToken = "<%= mapToken || process.env.MAP_TOKEN %>";
   const listing = <%- JSON.stringify(listing) %>;
 </script>
 
@@ -19,7 +19,7 @@
           <b>Owned By: <i><%= listing.owner ? listing.owner.username : "Unknown" %></i></b>
           <br /><br />
           <%= listing.description %><br />
-          &#x20B9; <%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A" %><br />
+          &#x20B9; <%= typeof listing.price === "number" ? listing.price.toLocaleString("en-IN") : "N/A" %> / night<br />
           <%= listing.location %>, <%= listing.country %>
         </p>
       </div>
@@ -27,7 +27,7 @@
 
     <% if (currUser && listing.owner && listing.owner._id.equals(currUser._id)) { %>
       <div class="d-flex gap-3 mb-3">
-        <a class="btn" href="/listings/<%= listing._id %>/edit">Edit</a>
+        <a class="btn btn-red" href="/listings/<%= listing._id %>/edit">Edit</a>
         <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE">
           <button class="btn btn-dark">Delete</button>
         </form>
@@ -59,19 +59,19 @@
         <div class="mb-3 mt-3">
           <label for="comment" class="form-label">Comments</label>
           <textarea name="review[comment]" id="comment" cols="20" rows="4" class="form-control" required></textarea>
-          <div class="invalid-feedback">Please write some comments for review.</div>
+          <div class="invalid-feedback">Please write some comments for the review.</div>
         </div>
-        <button class="btn btn-outline-dark">Submit</button>
+        <button class="btn btn-outline-dark">Submit Review</button>
       </form>
       <hr />
     <% } %>
 
-    <% if (listing.reviews.length > 0) { %>
+    <% if (listing.reviews && listing.reviews.length > 0) { %>
       <div class="row g-3 mt-2">
         <h4>All Reviews</h4>
         <% for (let review of listing.reviews) { %>
           <div class="col-md-6">
-            <div class="card h-100 p-2">
+            <div class="card h-100 p-2 shadow-sm border-0">
               <div class="card-body">
                 <h5 class="card-title">@<%= review.author ? review.author.username : "Anonymous" %></h5>
                 <p class="starability-result card-text" data-rating="<%= review.rating %>">
@@ -88,9 +88,10 @@
           </div>
         <% } %>
       </div>
+      <hr />
     <% } %>
 
-    <div class="col-12 mb-3 mt-3">
+    <div class="col-12 mb-4 mt-3">
       <h3>Where you'll be</h3>
       <div id="map"></div>
     </div>

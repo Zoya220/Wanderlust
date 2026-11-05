@@ -2,6 +2,9 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const Review = require("./review.js");
 
+const DEFAULT_IMAGE_URL =
+  "https://images.unsplash.com/photo-1622396481328-9b1b78cdd9fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60";
+
 const listingSchema = new Schema({
   title: {
     type: String,
@@ -15,12 +18,8 @@ const listingSchema = new Schema({
     },
     url: {
       type: String,
-      default:
-        "https://images.unsplash.com/photo-1622396481328-9b1b78cdd9fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60",
-      set: (v) =>
-        v === ""
-          ? "https://images.unsplash.com/photo-1622396481328-9b1b78cdd9fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60"
-          : v,
+      default: DEFAULT_IMAGE_URL,
+      set: (v) => (v === "" || !v ? DEFAULT_IMAGE_URL : v),
     },
   },
   price: Number,
@@ -40,11 +39,11 @@ const listingSchema = new Schema({
     type: {
       type: String,
       enum: ["Point"],
-      required: true,
+      default: "Point",
     },
     coordinates: {
       type: [Number],
-      required: true,
+      default: [0, 0],
     },
   },
 });

@@ -44,16 +44,11 @@ module.exports.createListing = async (req, res, next) => {
     newListing.image = { url, filename };
   }
 
-  // Attach geometry received from Mapbox
-  if (response.body.features.length) {
-    newListing.geometry = response.body.features[0].geometry;
-  }
+  newListing.geometry = response.body.features.length
+    ? response.body.features[0].geometry
+    : { type: "Point", coordinates: [0, 0] };
 
-  let savedListing = await newListing.save();
-
-  // Print geometry & coordinates in terminal
-  console.log("GEOMETRY:", savedListing.geometry);
-  console.log("COORDINATES:", savedListing.geometry.coordinates);
+  await newListing.save();
 
   req.flash("success", "New listing Created!");
   res.redirect("/listings");
@@ -78,14 +73,27 @@ module.exports.renderEditForm = async (req, res) => {
 
 module.exports.updateListing = async (req, res) => {
   let { id } = req.params;
+
+  let response = await geocodingClient
+    .forwardGeocode({
+      query: req.body.listing.location,
+      limit: 1,
+    })
+    .send();
+
   let listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+
+  if (response.body.features.length) {
+    listing.geometry = response.body.features[0].geometry;
+  }
 
   if (typeof req.file !== "undefined") {
     let url = req.file.path;
     let filename = req.file.filename;
     listing.image = { url, filename };
-    await listing.save();
   }
+
+  await listing.save();
 
   req.flash("success", "Listing Updated!");
   res.redirect(`/listings/${id}`);
